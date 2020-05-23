@@ -118,7 +118,7 @@
 
     <p class="aboutText text-monospace text-justify">Kami menyediakan kebutuhan cukur dalam genggaman ponsel anda. Anda tak perlu mengantre, tapi tetap bisa merasakan kualitas barbershop premium #stayathome.<br>
         Kami selalu memerhatikan keselamatan kerja dan kesehatan pelanggan sekaligus pegawai kami. Dibekali oleh protokol yang sudah kami buat melalui diskusi dengan dokter agar terhindar dari penyebaran penyakit atau virus.<br>
-        SOP kami : 1 cape/kain untuk 1 costumer, disinfectan alat, kapster memakai APD (masker, faceshield / kacamata, sarung tangan sekali pakai)</p>
+        SOP kami : 1 cape/kain untuk 1 customer, disinfectan alat, kapster memakai APD (masker, faceshield / kacamata, sarung tangan sekali pakai)</p>
 
     <hr>
 </div>
