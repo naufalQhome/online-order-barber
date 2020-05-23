@@ -11,6 +11,7 @@ class Sale extends CI_Controller
         $this->load->library('session');
         $this->load->library('email');
         $this->load->library('phpmailer_lib');
+        $this->load->model('Data_model');
     }
 
 
@@ -63,40 +64,70 @@ class Sale extends CI_Controller
             'konfirmasi' => TRUE,
             'sessionUser' => TRUE,
         );
-        $kode = null;
-        $cekSession = $this->session->userdata();
-        if (isset($cekSession['kodeUnik'])) {
-            $databaru = $this->session->userdata();
-
-            $this->load->model('Data_model');
-            $paket =  $databaru['pilihanPaket'];
-            $kec =  $databaru['pilihanTempat'];
-            $data['data'] = $databaru;
-            $data['paket'] = $this->Data_model->s_getPaket($paket);
-            $data['kecamatan'] = $this->Data_model->s_getKec($kec);
-            $this->load->view('template/header_another', $data);
-            $this->load->view('sale/konfirmasi', $data);
-            $this->load->view('template/footer', $data);
-        } elseif (isset($databaru['kodeUnik'])) {
-            $this->session->set_userdata($databaru);
-            $databaru = $this->session->userdata();
-
-            $this->load->model('Data_model');
-            $paket =  $databaru['pilihanPaket'];
-            $kec =  $databaru['pilihanTempat'];
-            $data['data'] = $databaru;
-            $data['paket'] = $this->Data_model->s_getPaket($paket);
-            $data['kecamatan'] = $this->Data_model->s_getKec($kec);
-            $this->load->view('template/header_another', $data);
-            $this->load->view('sale/konfirmasi', $data);
-            $this->load->view('template/footer', $data);
-        } elseif (!isset($cekSession['kodeUnik'])) {
-            $this->load->view('template/header_another', $data);
-            $this->load->view('sale/konfirmasiGagal');
-            $this->load->view('template/footer', $data);
-        } else {
-            echo "tetooot";
+        $paket = $databaru['pilihanPaket'];
+        $kec =  $databaru['pilihanTempat'];
+        $paket = $this->Data_model->s_getPaket($paket);
+        $kecamatan = $this->Data_model->s_getKec($kec);
+        foreach ($paket as $row) {
+            $idPaket[] = $row['id_paket'];
+            $harga[] =  $row['harga_paket'];
         };
+        $harga[] = $kecamatan['harga_kec'];
+        $harga[] = $databaru['kodeUnik'];
+        // var_dump($idPaket);
+        $totalHarga = array_sum($harga);
+        $s_pilihanPaket = implode(",", $idPaket);
+        // echo $s_pilihanPaket;
+        $t_tanggal = $databaru['tanggalCukur'];
+        $s_tanggal = date("Y-m-d", strtotime("$t_tanggal"));
+        $order = [
+            'kode_order' => $databaru['kodeUnik'],
+            'nama_order' => $databaru['namaCustomer'],
+            'paket_order' => $s_pilihanPaket,
+            'ponsel_order' => $databaru['nomorCustomer'],
+            'tempat_order' => $databaru['pilihanTempat'],
+            'tanggal_order' => $s_tanggal,
+            'jam_order' => $databaru['jamCukur'],
+            'total_order' => $totalHarga,
+        ];
+        $data = $this->Data_model->orderCustomer($order);
+        echo '<pre>', var_dump($order), '</pre>';
+
+
+        // $kode = null;
+        // $cekSession = $this->session->userdata();
+        // if (isset($cekSession['kodeUnik'])) {
+        //     $databaru = $this->session->userdata();
+
+        //     $this->load->model('Data_model');
+        //     $paket =  $databaru['pilihanPaket'];
+        //     $kec =  $databaru['pilihanTempat'];
+        //     $data['data'] = $databaru;
+        //     $data['paket'] = $this->Data_model->s_getPaket($paket);
+        //     $data['kecamatan'] = $this->Data_model->s_getKec($kec);
+        //     $this->load->view('template/header_another', $data);
+        //     $this->load->view('sale/konfirmasi', $data);
+        //     $this->load->view('template/footer', $data);
+        // } elseif (isset($databaru['kodeUnik'])) {
+        //     $this->session->set_userdata($databaru);
+        //     $databaru = $this->session->userdata();
+
+        //     $this->load->model('Data_model');
+        //     $paket =  $databaru['pilihanPaket'];
+        //     $kec =  $databaru['pilihanTempat'];
+        //     $data['data'] = $databaru;
+        //     $data['paket'] = $this->Data_model->s_getPaket($paket);
+        //     $data['kecamatan'] = $this->Data_model->s_getKec($kec);
+        //     $this->load->view('template/header_another', $data);
+        //     $this->load->view('sale/konfirmasi', $data);
+        //     $this->load->view('template/footer', $data);
+        // } elseif (!isset($cekSession['kodeUnik'])) {
+        //     $this->load->view('template/header_another', $data);
+        //     $this->load->view('sale/konfirmasiGagal');
+        //     $this->load->view('template/footer', $data);
+        // } else {
+        //     echo "tetooot";
+        // };
     }
 
     public function toValid()
