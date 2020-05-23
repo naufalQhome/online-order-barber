@@ -32,10 +32,22 @@ class Data_model  extends CI_Model
         return $query->row_array();
     }
 
+    public function s_getKec_result($id)
+    {
+        $query = $this->db->get_where('kecamatan', array('id_kec' => $id));
+        return $query->result_array();
+    }
+
     public function getWaktu()
     {
         $query = $this->db->get('waktu_order');
         return $query->result_array();
+    }
+
+    public function s_getWaktu($id)
+    {
+        $query = $this->db->get_where('waktu_order', array('id_waktu' => $id));
+        return $query->row_array();
     }
 
     public function orderCustomer($data = null)
@@ -63,6 +75,15 @@ class Data_model  extends CI_Model
             ->join('kecamatan', 'order_customer.tempat_order = kecamatan.id_kec')
             ->where($id)
             ->get();
+        return $query->row_array();
+    }
+
+    public function updateCustomerId($id)
+    {
+        $this->db->set('konfirmasi_order', '1');
+        $this->db->where('id_order', $id);
+        $this->db->update('order_customer');
+        $query = $this->db->get_where('order_customer', array('id_order' => $id));
         return $query->row_array();
     }
 }

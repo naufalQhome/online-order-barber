@@ -7,8 +7,9 @@
             Simpan nomor pembayaran anda <b><?= $order['id_order'] ?></b><br>
             Nomor Anda <b><?= $order['ponsel_order'] ?></b><br>
             Tempat Cukur Anda <b><?= $order['nama_kec'] ?></b><br><br>
+            Pembayaran Anda <b>Rp <?= number_format($order['total_order']) ?>,-</b><br>
             <a href="<?= base_url('sale/pesanLagi') ?>">Klik di sini jika ingin mendaftar lagi :)</a>
-          
+
         </p>
         <hr>
 
