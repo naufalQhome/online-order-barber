@@ -44,7 +44,7 @@
                  </button>
              </div>
              <div class="modal-body">
-                 <p class="text-justify text-monospace">Kami menyediakan kebutuhan cukur dalam genggaman ponsel anda. Anda tak perlu mengantre, tapi tetap bisa merasakan kualitas barbershop premium #stayathome.</p>
+                 <p class="text-justify text-monospace">Kami menyediakan kebutuhan cukur dalam genggaman ponsel anda. Anda tidak perlu repot datang ke barbershop, kami akan mendatangkan barber premium ke rumah anda. #stayathome</p>
              </div>
              <div class="modal-footer">
                  <div class="mx-auto">

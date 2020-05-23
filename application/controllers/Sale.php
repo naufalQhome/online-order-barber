@@ -29,6 +29,7 @@ class Sale extends CI_Controller
             $this->load->model('Data_model');
             $data['paket1'] = $this->Data_model->getPaket();
             $data['kecamatan'] = $this->Data_model->getKec();
+            $data['waktu'] = $this->Data_model->getWaktu();
             $this->load->view('template/header_index', $data);
             $this->load->view('sale/indexUser', $data);
             $this->load->view('template/footer_index', $data);
@@ -37,6 +38,7 @@ class Sale extends CI_Controller
             $this->load->model('Data_model');
             $data['paket1'] = $this->Data_model->getPaket();
             $data['kecamatan'] = $this->Data_model->getKec();
+            $data['waktu'] = $this->Data_model->getWaktu();
             $this->load->view('template/header_index', $data);
             $this->load->view('sale/index', $data);
             $this->load->view('template/footer_index', $data);

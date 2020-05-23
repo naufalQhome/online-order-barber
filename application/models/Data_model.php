@@ -32,6 +32,12 @@ class Data_model  extends CI_Model
         return $query->row_array();
     }
 
+    public function getWaktu()
+    {
+        $query = $this->db->get('waktu_order');
+        return $query->result_array();
+    }
+
     public function orderCustomer($data = null)
     {
         $query = $this->db->insert('order_customer', $data);
@@ -49,7 +55,7 @@ class Data_model  extends CI_Model
         return $query->row_array();
     }
 
-     public function orderCostumerJoin($iddata)
+    public function orderCostumerJoin($iddata)
     {
         $id = array('order_customer.id_order' => $iddata);
         $query = $this->db->select('*')
