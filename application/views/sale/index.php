@@ -69,7 +69,7 @@
                         <input name="tanggalCukur" id="datepicker" class="form-control" placeholder="Tanggal.." required>
                     </div>
                     <div class="form-group">
-                        <label for="pilihanPaket">Pukul Berapa? </label>
+                        <label for="pilihanPaket">Pukul Berapaa? </label>
                         <select name="jamCukur" placeholder="Pilih.." class="form-control selectpicker" id="pilihanPaket" data-size="4" required>
                             <?php foreach ($waktu as $row) : ?>
                                 <option value="<?= $row['id_waktu'] ?>"><?= $row['nama_waktu'] ?> WIB</option>
