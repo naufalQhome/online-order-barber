@@ -63,87 +63,87 @@ class Sale extends CI_Controller
             'sessionUser' => TRUE,
         );
 
-        var_dump($databaru);
+        // var_dump($databaru);
 
-        // if (!$this->session->has_userdata('id_konfirmasi')) {
-        //     $databaru = array(
-        //         'kodeUnik' => $this->input->post('kodeUnik', true),
-        //         'namaCustomer' => $this->input->post('namaCustomer', true),
-        //         'pilihanPaket' => $this->input->post('pilihanPaket', true),
-        //         'nomorCustomer' => $this->input->post('nomorCustomer', true),
-        //         'pilihanTempat' => $this->input->post('pilihanTempat', true),
-        //         'tanggalCukur' => $this->input->post('tanggalCukur', true),
-        //         'jamCukur' => $this->input->post('jamCukur', true),
-        //         'konfirmasi' => TRUE,
-        //         'sessionUser' => TRUE,
-        //     );
-        //     $this->session->set_userdata($databaru);
-        //     $paket = $databaru['pilihanPaket'];
-        //     $kec =  $databaru['pilihanTempat'];
-        //     $paket = $this->Data_model->s_getPaket($paket);
-        //     $kecamatan = $this->Data_model->s_getKec($kec);
-        //     foreach ($paket as $row) {
-        //         $idPaket[] = $row['id_paket'];
-        //         $harga[] =  $row['harga_paket'];
-        //     };
-        //     $harga[] = $kecamatan['harga_kec'];
-        //     $harga[] = $databaru['kodeUnik'];
-        //     // var_dump($idPaket);
-        //     $totalHarga = array_sum($harga);
-        //     $s_pilihanPaket = implode(",", $idPaket);
-        //     // echo $s_pilihanPaket;
-        //     $t_tanggal = $databaru['tanggalCukur'];
-        //     $s_tanggal = date("Y-m-d", strtotime("$t_tanggal"));
-        //     $order = [
-        //         'kode_order' => $databaru['kodeUnik'],
-        //         'nama_order' => $databaru['namaCustomer'],
-        //         'paket_order' => $s_pilihanPaket,
-        //         'ponsel_order' => $databaru['nomorCustomer'],
-        //         'tempat_order' => $databaru['pilihanTempat'],
-        //         'tanggal_order' => $s_tanggal,
-        //         'jam_order' => $databaru['jamCukur'],
-        //         'total_order' => $totalHarga,
-        //     ];
-        //     $data = $this->Data_model->orderCustomer($order);
-        //     $id_order = $data['insert_id'];
-        //     $this->session->set_userdata('id_konfirmasi', $id_order);
-        //     // echo '<pre>', var_dump($order), '</pre>';
-        // }
+        if (!$this->session->has_userdata('id_konfirmasi')) {
+            $databaru = array(
+                'kodeUnik' => $this->input->post('kodeUnik', true),
+                'namaCustomer' => $this->input->post('namaCustomer', true),
+                'pilihanPaket' => $this->input->post('pilihanPaket', true),
+                'nomorCustomer' => $this->input->post('nomorCustomer', true),
+                'pilihanTempat' => $this->input->post('pilihanTempat', true),
+                'tanggalCukur' => $this->input->post('tanggalCukur', true),
+                'jamCukur' => $this->input->post('jamCukur', true),
+                'konfirmasi' => TRUE,
+                'sessionUser' => TRUE,
+            );
+            $this->session->set_userdata($databaru);
+            $paket = $databaru['pilihanPaket'];
+            $kec =  $databaru['pilihanTempat'];
+            $paket = $this->Data_model->s_getPaket($paket);
+            $kecamatan = $this->Data_model->s_getKec($kec);
+            foreach ($paket as $row) {
+                $idPaket[] = $row['id_paket'];
+                $harga[] =  $row['harga_paket'];
+            };
+            $harga[] = $kecamatan['harga_kec'];
+            $harga[] = $databaru['kodeUnik'];
+            // var_dump($idPaket);
+            $totalHarga = array_sum($harga);
+            $s_pilihanPaket = implode(",", $idPaket);
+            // echo $s_pilihanPaket;
+            $t_tanggal = $databaru['tanggalCukur'];
+            $s_tanggal = date("Y-m-d", strtotime("$t_tanggal"));
+            $order = [
+                'kode_order' => $databaru['kodeUnik'],
+                'nama_order' => $databaru['namaCustomer'],
+                'paket_order' => $s_pilihanPaket,
+                'ponsel_order' => $databaru['nomorCustomer'],
+                'tempat_order' => $databaru['pilihanTempat'],
+                'tanggal_order' => $s_tanggal,
+                'jam_order' => $databaru['jamCukur'],
+                'total_order' => $totalHarga,
+            ];
+            $data = $this->Data_model->orderCustomer($order);
+            $id_order = $data['insert_id'];
+            $this->session->set_userdata('id_konfirmasi', $id_order);
+            // echo '<pre>', var_dump($order), '</pre>';
+        }
 
 
-        // $kode = null;
-        // $cekSession = $this->session->userdata();
-        // if (isset($cekSession['id_konfirmasi'])) {
-        //     $databaru = $this->session->userdata();
-        //     $id_order = $databaru['id_konfirmasi'];
-        //     $kecamatan = $this->Data_model->s_getKec($databaru['pilihanTempat']);
-        //     $paket = $this->Data_model->s_getPaket($databaru['pilihanPaket']);
-        //     $jam = $this->Data_model->s_getWaktu($databaru['jamCukur']);
-        //     $data['jam'] = $jam;
-        //     $data['kecamatan'] = $kecamatan;
-        //     $data['paket'] = $paket;
-        //     $data['order'] = $this->Data_model->orderCustomerId($id_order);
-        //     $this->load->view('template/header_another', $data);
-        //     $this->load->view('sale/konfirmasi', $data);
-        //     $this->load->view('template/footer', $data);
-        // } elseif (isset($databaru['kode_order'])) {
-        //     $this->session->set_userdata($databaru);
-        //     $jam = $this->Data_model->s_getWaktu($databaru['jamCukur']);
-        //     $id_order = $databaru['id_konfirmasi'];
-        //     $databaru = $this->session->userdata();
-        //     $data['kecamatan'] = $kecamatan;
-        //     $data['paket'] = $paket;
-        //     $data['order'] = $this->Data_model->orderCustomerId($id_order);
-        //     $this->load->view('template/header_another', $data);
-        //     $this->load->view('sale/konfirmasi', $data);
-        //     $this->load->view('template/footer', $data);
-        // } elseif (!isset($cekSession['kode_order'])) {
-        //     $this->load->view('template/header_another');
-        //     $this->load->view('sale/konfirmasiGagal');
-        //     $this->load->view('template/footer');
-        // } else {
-        //     echo "tetooot";
-        // };
+        $kode = null;
+        $cekSession = $this->session->userdata();
+        if (isset($cekSession['id_konfirmasi'])) {
+            $databaru = $this->session->userdata();
+            $id_order = $databaru['id_konfirmasi'];
+            $kecamatan = $this->Data_model->s_getKec($databaru['pilihanTempat']);
+            $paket = $this->Data_model->s_getPaket($databaru['pilihanPaket']);
+            $jam = $this->Data_model->s_getWaktu($databaru['jamCukur']);
+            $data['jam'] = $jam;
+            $data['kecamatan'] = $kecamatan;
+            $data['paket'] = $paket;
+            $data['order'] = $this->Data_model->orderCustomerId($id_order);
+            $this->load->view('template/header_another', $data);
+            $this->load->view('sale/konfirmasi', $data);
+            $this->load->view('template/footer', $data);
+        } elseif (isset($databaru['kode_order'])) {
+            $this->session->set_userdata($databaru);
+            $jam = $this->Data_model->s_getWaktu($databaru['jamCukur']);
+            $id_order = $databaru['id_konfirmasi'];
+            $databaru = $this->session->userdata();
+            $data['kecamatan'] = $kecamatan;
+            $data['paket'] = $paket;
+            $data['order'] = $this->Data_model->orderCustomerId($id_order);
+            $this->load->view('template/header_another', $data);
+            $this->load->view('sale/konfirmasi', $data);
+            $this->load->view('template/footer', $data);
+        } elseif (!isset($cekSession['kode_order'])) {
+            $this->load->view('template/header_another');
+            $this->load->view('sale/konfirmasiGagal');
+            $this->load->view('template/footer');
+        } else {
+            echo "tetooot";
+        };
     }
 
     public function toValid()
@@ -169,7 +169,11 @@ class Sale extends CI_Controller
         $sessionId = array('id_custom' => $id_data);
         $this->session->set_userdata($sessionId);
         $joinKec = $this->Data_model->orderCostumerJoin($id_data);
+        $id_waktu = $joinKec['jam_order'];
         $tanggal = date("d-m-Y", strtotime($data['tanggal_order']));
+        $jam = $this->Data_model->s_getWaktu($id_waktu);
+        $jam = $jam['nama_waktu'];
+        // $data['jam'] = $jam;
         // PHPMailer object
         $mail = $this->phpmailer_lib->load();
 
@@ -201,7 +205,7 @@ class Sale extends CI_Controller
         // Email body content
         $mailContent = "<h1>Rp." . $data['total_order'] . " ,-</h1>
             <p>Hai! kami dari m-barber.com ingin mengonfirmasi pesanan
-            <li>Nama : " . $data['nama_order'] . "</li><li>Paket : " . $data['paket_order'] . "</li><li>Ponsel : " . $data['ponsel_order'] . "</li><li>Kec : " . $joinKec['nama_kec'] . "</li><li>Tanggal : " . $tanggal . "</li><li>Jam : " . $data['jam_order'] . "</li><li>Total : Rp. " . number_format($data['total_order']) . ",-</li>Telah berhasil terdaftar, kapster kami akan menghubungi anda paling lambat 1 jam sebelum waktu yang di tentukan. Terima kasih<br></p><a href='https://api.whatsapp.com/send?phone=" . $data['ponsel_order'] . "&text=Hai!%20terimakasih%20anda%20telah%20mendaftar%20cukur%20rambut%20pada%20m-barber.com%20'>Klik untuk chat WA " . $data['ponsel_order'] . "</a>";
+            <li>Nama : " . $data['nama_order'] . "</li><li>Paket : " . $data['paket_order'] . "</li><li>Ponsel : " . $data['ponsel_order'] . "</li><li>Kec : " . $joinKec['nama_kec'] . "</li><li>Tanggal : " . $tanggal . "</li><li>Jam : " . $jam . "</li><li>Total : Rp. " . number_format($data['total_order']) . ",-</li>Telah berhasil terdaftar, kapster kami akan menghubungi anda paling lambat 1 jam sebelum waktu yang di tentukan. Terima kasih<br></p><a href='https://api.whatsapp.com/send?phone=" . $data['ponsel_order'] . "&text=Hai!%20terimakasih%20anda%20telah%20mendaftar%20cukur%20rambut%20pada%20m-barber.com%20'>Klik untuk chat WA " . $data['ponsel_order'] . "</a>";
         $mail->Body = $mailContent;
 
         // Send email

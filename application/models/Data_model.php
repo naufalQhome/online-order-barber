@@ -73,6 +73,7 @@ class Data_model  extends CI_Model
         $query = $this->db->select('*')
             ->from('order_customer')
             ->join('kecamatan', 'order_customer.tempat_order = kecamatan.id_kec')
+            ->join('waktu_order', 'order_customer.jam_order = waktu_order.id_waktu')
             ->where($id)
             ->get();
         return $query->row_array();
