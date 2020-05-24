@@ -11,7 +11,7 @@
                 <div class="carousel-inner">
                     <?php foreach ($paket1 as $corousel) : ?>
                         <div class="carousel-item <?= $corousel['tampil_paket'] ?>">
-                            <img class="mx-auto d-block w-100" src="<?= base_url('assets/img/') . $corousel['gambar_paket'] ?>" style="max-width: 80%" alt="...">
+                            <img class="bg-image mx-auto d-block w-100" src="<?= base_url('assets/img/') . $corousel['gambar_paket'] ?>" style="max-width: 80%" alt="...">
                             <div class="carousel-caption">
                                 <h5><?= $corousel['nama_paket'] ?></h5>
                                 <p><?= $corousel['deskripsi_paket'] ?> | Rp.<?= number_format($corousel['harga_paket']) ?>,-</p>

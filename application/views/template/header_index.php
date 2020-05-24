@@ -27,9 +27,31 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .carousel-caption h5,
-        p {
-            color: #333333;
+        .carousel-caption {
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.6);
+            /* Black w/opacity/see-through */
+            color: white;
+            font-weight: bold;
+            border: 3px solid #f1f1f1;
+        }
+
+        .bg-image {
+            /* The image used */
+            /* background-image: url("photographer.jpg"); */
+
+            /* Add the blur effect */
+            filter: blur(2px);
+            -webkit-filter: blur(2px);
+
+            /* Full height */
+            height: 100%;
+
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
         }
 
         label {
