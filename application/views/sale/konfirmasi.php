@@ -6,11 +6,19 @@ $tanggal = date("d-m-Y", strtotime($order['tanggal_order']));
         <h4 class="alert-heading">Berhasil!</h4>
         <p>
             <?= $order['nama_order'] ?>, <?= $order['ponsel_order'] ?>, di kecamatan <?= $kecamatan['nama_kec'] ?>, cukur pada <?= $tanggal ?>, jam <?= $jam['nama_waktu'] ?>.
+
+            <form class="col">
+                <div class="form-group form-inline row">
+                    <label for="inputPassword" class="col-form-label mr-sm-2">Total <b> Rp. <?= number_format($order['total_order']) ?>,- </b></label>
+                    <div class="">
+                        <input type="text" class="form-control form-control-sm" id="kodePromo" placeholder="tambakahkan promo">
+                    </div>
+                </div>
+            </form>
             <?php foreach ($paket as $row) : ?>
                 <li><?= $row['nama_paket'] ?> | Rp. <?= number_format($row['harga_paket']) ?>,-</li>
             <?php endforeach ?>
             <li><?= $kecamatan['nama_kec'] ?> | Rp. <?= number_format($kecamatan['harga_kec']) ?>,-</li>
-
             <li>Kode Pembayaran | <?= $order['kode_order'] ?></li><br>
             <ul>Total <b> Rp. <?= number_format($order['total_order']) ?>,-</b></ul>
             Pendaftaran anda berhasil, pastikan anda dalam keadaan tidak demam, batuk,pilek atau nyeri telan, silakan melakukan pembayaran via transfer bank ke rekening <b>BCA</b> atas nama RA. Nurul Malita <b>0374211117</b> dengan total biaya<b> Rp. <?= number_format($order['total_order']) ?>,-</b>, lalu konfirmasi pembayaran di bawah ini.
