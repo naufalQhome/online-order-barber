@@ -14,7 +14,7 @@
                             <img class="bg-image mx-auto d-block w-100" src="<?= base_url('assets/img/') . $corousel['gambar_paket'] ?>" style="max-width: 80%" alt="...">
                             <div class="carousel-caption">
                                 <h5><?= $corousel['nama_paket'] ?></h5>
-                                <p><?= $corousel['deskripsi_paket'] ?> | Rp.<?= number_format($corousel['harga_paket']) ?>,-</p>
+                                <p><?= $corousel['deskripsi_paket'] ?> | Rp<?= number_format($corousel['harga_paket'], 0, ".", ".") ?>,-</p>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -116,7 +116,7 @@
         <!-- <span class="byline">Replicating and improving the lightbox module seen on Medium with fluid transitions</span> -->
     </header>
 
-    <p class="aboutText text-monospace text-justify">Kami menyediakan kebutuhan cukur dalam genggaman ponsel anda. Anda tak perlu mengantre, tapi tetap bisa merasakan kualitas barbershop premium #stayathome.<br>
+    <p class="aboutText text-monospace text-justify">Kami menyediakan kebutuhan cukur dalam genggaman ponsel Anda. Anda tak perlu mengantre, tapi tetap bisa merasakan kualitas barbershop premium #stayathome.<br>
         Kami selalu memerhatikan keselamatan kerja dan kesehatan pelanggan sekaligus pegawai kami. Dibekali oleh protokol yang sudah kami buat melalui diskusi dengan dokter agar terhindar dari penyebaran penyakit atau virus.<br>
         SOP kami : 1 cape/kain untuk 1 costumer, disinfectan alat, kapster memakai APD (masker, faceshield / kacamata, sarung tangan sekali pakai)</p>
 
@@ -131,7 +131,7 @@
         <!-- <span class="byline">Replicating and improving the lightbox module seen on Medium with fluid transitions</span> -->
     </header>
 
-    <p class="aboutText text-monospace text-justify">Kami bergerak di dunia barbershop sejak 2010, yang saat ini beroperasi di Jl. Serma Taruna Ramli No 12, Kotabaru, Gondukusuman, Yk (Arta Barber and Chill). Kami berusaha melayani pelanggan kami dengan sebaik mungkin salah satunya dengan menambahkan fasilitas <i>mobile barbershop</i> dengan kualitas Barbershop premium, kapster profesional dan dengan harga yang pantas.<br>
+    <p class="aboutText text-monospace text-justify">Kami bergerak di dunia barbershop sejak 2010, yang saat ini beroperasi di Jl. Serma Taruna Ramli No 12, Kotabaru, Gondukusuman, Yk (Arta Barber and Chill). Kami berusaha melayani pelanggan kami dengan sebaik mungkin salah satunya dengan menambahkan fasilitas <i>mobile barbershop</i> dengan kualitas Barbershop premium, kapster profesional serta dengan harga yang pantas.<br>
         #potongrambutpanggilan #cukurpanggilan #barberhome #barberhomejogja #cukurdirumah #barberpanggilan</p>
     <br><br><br>
 </div>

@@ -5,15 +5,15 @@ $tanggal = date("d-m-Y", strtotime($order['tanggal_order']));
     <div class="alert alert-success" role="alert">
         <h4 class="alert-heading">Berhasil!</h4>
         <p>
-            <?= $order['nama_order'] ?>, <?= $order['ponsel_order'] ?>, di kecamatan <?= $kecamatan['nama_kec'] ?>, cukur pada <?= $tanggal ?>, jam <?= $jam['nama_waktu'] ?>.
+            <?= $order['nama_order'] ?>, <?= $order['ponsel_order'] ?>, di kecamatan <?= $kecamatan['nama_kec'] ?>, cukur pada <?= $tanggal ?> jam <?= $jam['nama_waktu'] ?>.
             <?php foreach ($paket as $row) : ?>
-                <li><?= $row['nama_paket'] ?> | Rp. <?= number_format($row['harga_paket']) ?>,-</li>
+                <li><?= $row['nama_paket'] ?> | Rp<?= number_format($row['harga_paket'], 0, ".", ".") ?>,-</li>
             <?php endforeach ?>
-            <li><?= $kecamatan['nama_kec'] ?> | Rp. <?= number_format($kecamatan['harga_kec']) ?>,-</li>
+            <li><?= $kecamatan['nama_kec'] ?> | Rp<?= number_format($kecamatan['harga_kec'], 0, ".", ".") ?>,-</li>
 
             <li>Kode Pembayaran | <?= $order['kode_order'] ?></li><br>
-            <ul>Total <b> Rp. <?= number_format($order['total_order']) ?>,-</b></ul>
-            Pendaftaran anda berhasil, pastikan anda dalam keadaan tidak demam, batuk,pilek atau nyeri telan, silakan melakukan pembayaran via transfer bank ke rekening <b>BCA</b> atas nama RA. Nurul Malita <b>0374211117</b> dengan total biaya<b> Rp. <?= number_format($order['total_order']) ?>,-</b>, lalu konfirmasi pembayaran di bawah ini.
+            <ul>Total <b> Rp<?= number_format($order['total_order'], 0, ".", ".") ?>,-</b></ul>
+            Pendaftaran anda berhasil, pastikan anda dalam keadaan tidak demam, batuk, pilek atau nyeri telan. Silakan melakukan pembayaran via transfer bank ke rekening <b>BCA</b> atas nama RA. Nurul Malita <b>0374211117</b> dengan total biaya<b> Rp<?= number_format($order['total_order'], 0, ".", ".") ?>,-</b>, lalu konfirmasi pembayaran di bawah ini.
         </p>
         <hr>
 

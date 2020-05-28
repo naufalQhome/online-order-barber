@@ -3,7 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Sale extends CI_Controller
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -59,8 +58,8 @@ class Sale extends CI_Controller
             'pilihanTempat' => $this->input->post('pilihanTempat', true),
             'tanggalCukur' => $this->input->post('tanggalCukur', true),
             'jamCukur' => $this->input->post('jamCukur', true),
-            'konfirmasi' => TRUE,
-            'sessionUser' => TRUE,
+            'konfirmasi' => true,
+            'sessionUser' => true,
         );
 
         // var_dump($databaru);
@@ -74,8 +73,8 @@ class Sale extends CI_Controller
                 'pilihanTempat' => $this->input->post('pilihanTempat', true),
                 'tanggalCukur' => $this->input->post('tanggalCukur', true),
                 'jamCukur' => $this->input->post('jamCukur', true),
-                'konfirmasi' => TRUE,
-                'sessionUser' => TRUE,
+                'konfirmasi' => true,
+                'sessionUser' => true,
             );
             $this->session->set_userdata($databaru);
             $paket = $databaru['pilihanPaket'];
@@ -148,7 +147,7 @@ class Sale extends CI_Controller
 
     public function toValid()
     {
-        $sessionBaru = array('validasi' => TRUE);
+        $sessionBaru = array('validasi' => true);
         $hapusSession = array('konfirmasi', 'pilihanPaket', 'pilihanTempat', 'tanggalCukur');
         $this->session->set_userdata($sessionBaru);
         $this->session->unset_userdata($hapusSession);
@@ -192,7 +191,7 @@ class Sale extends CI_Controller
         // Add a recipient
         $mail->addAddress('barbermobile1@gmail.com');
 
-        // // Add cc or bcc 
+        // // Add cc or bcc
         // $mail->addCC('arfinhenditya2@gmail.com');
         $mail->addBCC('n20041996@gmail.com');
 
