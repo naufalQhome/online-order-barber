@@ -45,12 +45,29 @@
                         <input name="namaCustomer" type="text" class="form-control" id="namaCustomer" maxlength="30" placeholder="Nama" value="<?= $sessionData['namaCustomer'] ?>" required>
                     </div>
                     <div class="form-group">
-                        <label for="pilihanPaket">Pilihan Paket</label>
-                        <select name="pilihanPaket[]" class="form-control selectpicker required" id="pilihanPaket" data-size="4" multiple required>
-                            <?php foreach ($paket1 as $paket) : ?>
-                                <option value="<?= $paket['id_paket'] ?>"><?= $paket['nama_paket'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <!-- <label for="pilihanPaket">Pilihan Paket</label><br> -->
+                        <div class="container-fluid form-inline">
+                            <?php
+                            $i = 1;
+                            foreach ($paket1 as $paket) : $i++; ?>
+                                <div class="row">
+                                    <label for="" class="control-label col"><?= $paket['nama_paket'] ?></label>
+                                    <div class="input-group col">
+                                        <span class="input-group-prepend">
+                                            <button type="button" class="btn btn-light btn-number" disabled="disabled" data-type="minus" data-field="quant[<?= $i ?>]">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                        </span>
+                                        <input type="text" name="quant[<?= $i ?>]" class="form-control input-number" value="0" min="0" max="3">
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-light btn-number" data-type="plus" data-field="quant[<?= $i ?>]">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            <?php endforeach ?>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="nomorCustomer">Nomor Whatsapp</label>
@@ -74,6 +91,14 @@
                             <?php foreach ($waktu as $row) : ?>
                                 <option value="<?= $row['id_waktu'] ?>"><?= $row['nama_waktu'] ?> WIB</option>
                             <?php endforeach ?>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pilihanPaket">Pembayaran Via </label>
+                        <select name="jamCukur" placeholder="Pilih.." class="form-control selectpicker" id="pilihanPaket" data-size="4" required>
+                            <option value="1">Transfer</option>
+                            <option value="2">Tunai</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Daftar</button>

@@ -51,21 +51,7 @@ class Sale extends CI_Controller
         if ($this->session->has_userdata('validasi') == 'TRUE') {
             redirect('sale/validasi');
         };
-        $databaru = array(
-            'kodeUnik' => $this->input->post('kodeUnik', true),
-            'namaCustomer' => $this->input->post('namaCustomer', true),
-            'pilihanPaket' => $this->input->post('pilihanPaket', true),
-            'nomorCustomer' => $this->input->post('nomorCustomer', true),
-            'pilihanTempat' => $this->input->post('pilihanTempat', true),
-            'tanggalCukur' => $this->input->post('tanggalCukur', true),
-            'jamCukur' => $this->input->post('jamCukur', true),
-            'konfirmasi' => TRUE,
-            'sessionUser' => TRUE,
-        );
-
-        // var_dump($databaru);
-
-        if (!$this->session->has_userdata('id_konfirmasi')) {
+        if ($this->input->post('kodeUnik')) {
             $databaru = array(
                 'kodeUnik' => $this->input->post('kodeUnik', true),
                 'namaCustomer' => $this->input->post('namaCustomer', true),
@@ -77,73 +63,93 @@ class Sale extends CI_Controller
                 'konfirmasi' => TRUE,
                 'sessionUser' => TRUE,
             );
-            $this->session->set_userdata($databaru);
-            $paket = $databaru['pilihanPaket'];
-            $kec =  $databaru['pilihanTempat'];
-            $paket = $this->Data_model->s_getPaket($paket);
-            $kecamatan = $this->Data_model->s_getKec($kec);
-            foreach ($paket as $row) {
-                $idPaket[] = $row['id_paket'];
-                $harga[] =  $row['harga_paket'];
+
+            // var_dump($databaru);
+
+            if (!$this->session->has_userdata('id_konfirmasi')) {
+                $databaru = array(
+                    'kodeUnik' => $this->input->post('kodeUnik', true),
+                    'namaCustomer' => $this->input->post('namaCustomer', true),
+                    'pilihanPaket' => $this->input->post('pilihanPaket', true),
+                    'nomorCustomer' => $this->input->post('nomorCustomer', true),
+                    'pilihanTempat' => $this->input->post('pilihanTempat', true),
+                    'tanggalCukur' => $this->input->post('tanggalCukur', true),
+                    'jamCukur' => $this->input->post('jamCukur', true),
+                    'konfirmasi' => TRUE,
+                    'sessionUser' => TRUE,
+                );
+                $this->session->set_userdata($databaru);
+                $paket = $databaru['pilihanPaket'];
+                $kec =  $databaru['pilihanTempat'];
+                $paket = $this->Data_model->s_getPaket($paket);
+                $kecamatan = $this->Data_model->s_getKec($kec);
+                foreach ($paket as $row) {
+                    $idPaket[] = $row['id_paket'];
+                    $harga[] =  $row['harga_paket'];
+                };
+                $harga[] = $kecamatan['harga_kec'];
+                $harga[] = $databaru['kodeUnik'];
+                // var_dump($idPaket);
+                $totalHarga = array_sum($harga);
+                $s_pilihanPaket = implode(",", $idPaket);
+                // echo $s_pilihanPaket;
+                $t_tanggal = $databaru['tanggalCukur'];
+                $s_tanggal = date("Y-m-d", strtotime("$t_tanggal"));
+                $order = [
+                    'kode_order' => $databaru['kodeUnik'],
+                    'nama_order' => $databaru['namaCustomer'],
+                    'paket_order' => $s_pilihanPaket,
+                    'ponsel_order' => $databaru['nomorCustomer'],
+                    'tempat_order' => $databaru['pilihanTempat'],
+                    'tanggal_order' => $s_tanggal,
+                    'jam_order' => $databaru['jamCukur'],
+                    'total_order' => $totalHarga,
+                ];
+                $data = $this->Data_model->orderCustomer($order);
+                $id_order = $data['insert_id'];
+                $this->session->set_userdata('id_konfirmasi', $id_order);
+                // echo '<pre>', var_dump($order), '</pre>';
+            }
+
+
+            $kode = null;
+            $cekSession = $this->session->userdata();
+            if (isset($cekSession['id_konfirmasi'])) {
+                $databaru = $this->session->userdata();
+                $id_order = $databaru['id_konfirmasi'];
+                $kecamatan = $this->Data_model->s_getKec($databaru['pilihanTempat']);
+                $paket = $this->Data_model->s_getPaket($databaru['pilihanPaket']);
+                $jam = $this->Data_model->s_getWaktu($databaru['jamCukur']);
+                $data['jam'] = $jam;
+                $data['kecamatan'] = $kecamatan;
+                $data['paket'] = $paket;
+                $data['order'] = $this->Data_model->orderCustomerId($id_order);
+                $this->load->view('template/header_another', $data);
+                $this->load->view('sale/konfirmasi', $data);
+                $this->load->view('template/footer', $data);
+            } elseif (isset($databaru['kode_order'])) {
+                $this->session->set_userdata($databaru);
+                $jam = $this->Data_model->s_getWaktu($databaru['jamCukur']);
+                $id_order = $databaru['id_konfirmasi'];
+                $databaru = $this->session->userdata();
+                $data['kecamatan'] = $kecamatan;
+                $data['paket'] = $paket;
+                $data['order'] = $this->Data_model->orderCustomerId($id_order);
+                $this->load->view('template/header_another', $data);
+                $this->load->view('sale/konfirmasi', $data);
+                $this->load->view('template/footer', $data);
+            } elseif (!isset($cekSession['kode_order'])) {
+                $this->load->view('template/header_another');
+                $this->load->view('sale/konfirmasiGagal');
+                $this->load->view('template/footer');
+            } else {
+                echo "tetooot";
             };
-            $harga[] = $kecamatan['harga_kec'];
-            $harga[] = $databaru['kodeUnik'];
-            // var_dump($idPaket);
-            $totalHarga = array_sum($harga);
-            $s_pilihanPaket = implode(",", $idPaket);
-            // echo $s_pilihanPaket;
-            $t_tanggal = $databaru['tanggalCukur'];
-            $s_tanggal = date("Y-m-d", strtotime("$t_tanggal"));
-            $order = [
-                'kode_order' => $databaru['kodeUnik'],
-                'nama_order' => $databaru['namaCustomer'],
-                'paket_order' => $s_pilihanPaket,
-                'ponsel_order' => $databaru['nomorCustomer'],
-                'tempat_order' => $databaru['pilihanTempat'],
-                'tanggal_order' => $s_tanggal,
-                'jam_order' => $databaru['jamCukur'],
-                'total_order' => $totalHarga,
-            ];
-            $data = $this->Data_model->orderCustomer($order);
-            $id_order = $data['insert_id'];
-            $this->session->set_userdata('id_konfirmasi', $id_order);
-            // echo '<pre>', var_dump($order), '</pre>';
-        }
-
-
-        $kode = null;
-        $cekSession = $this->session->userdata();
-        if (isset($cekSession['id_konfirmasi'])) {
-            $databaru = $this->session->userdata();
-            $id_order = $databaru['id_konfirmasi'];
-            $kecamatan = $this->Data_model->s_getKec($databaru['pilihanTempat']);
-            $paket = $this->Data_model->s_getPaket($databaru['pilihanPaket']);
-            $jam = $this->Data_model->s_getWaktu($databaru['jamCukur']);
-            $data['jam'] = $jam;
-            $data['kecamatan'] = $kecamatan;
-            $data['paket'] = $paket;
-            $data['order'] = $this->Data_model->orderCustomerId($id_order);
-            $this->load->view('template/header_another', $data);
-            $this->load->view('sale/konfirmasi', $data);
-            $this->load->view('template/footer', $data);
-        } elseif (isset($databaru['kode_order'])) {
-            $this->session->set_userdata($databaru);
-            $jam = $this->Data_model->s_getWaktu($databaru['jamCukur']);
-            $id_order = $databaru['id_konfirmasi'];
-            $databaru = $this->session->userdata();
-            $data['kecamatan'] = $kecamatan;
-            $data['paket'] = $paket;
-            $data['order'] = $this->Data_model->orderCustomerId($id_order);
-            $this->load->view('template/header_another', $data);
-            $this->load->view('sale/konfirmasi', $data);
-            $this->load->view('template/footer', $data);
-        } elseif (!isset($cekSession['kode_order'])) {
+        } else {
             $this->load->view('template/header_another');
             $this->load->view('sale/konfirmasiGagal');
             $this->load->view('template/footer');
-        } else {
-            echo "tetooot";
-        };
+        }
     }
 
     public function toValid()
