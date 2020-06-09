@@ -18,13 +18,13 @@ class Sale extends CI_Controller
 
     public function index()
     {
-        if ($this->session->has_userdata('konfirmasi') == 'TRUE') {
+        if ($this->session->has_userdata('konfirmasi') == 'true') {
             redirect('sale/konfirmasi');
         };
-        if ($this->session->has_userdata('validasi') == 'TRUE') {
+        if ($this->session->has_userdata('validasi') == 'true') {
             redirect('sale/validasi');
         };
-        if ($this->session->has_userdata('sessionUser') == 'TRUE') {
+        if ($this->session->has_userdata('sessionUser') == 'true') {
             // echo 'iniheee';
             $data['sessionData'] = $this->session->userdata();
             $this->load->model('Data_model');
@@ -48,10 +48,10 @@ class Sale extends CI_Controller
 
     public function konfirmasi()
     {
-        if ($this->session->has_userdata('validasi') == 'TRUE') {
+        if ($this->session->has_userdata('validasi') == 'true') {
             redirect('sale/validasi');
         };
-        if ($this->input->post('kodeUnik')) {
+        if ($this->input->post('pembayaran') == 1) {
             $databaru = array(
                 'kodeUnik' => $this->input->post('kodeUnik', true),
                 'namaCustomer' => $this->input->post('namaCustomer', true),
@@ -68,15 +68,15 @@ class Sale extends CI_Controller
 
             if (!$this->session->has_userdata('id_konfirmasi')) {
                 $databaru = array(
-                    'kodeUnik' => $this->input->post('kodeUnik', true),
+                    'kodeUnik' => rand(10, 900),
                     'namaCustomer' => $this->input->post('namaCustomer', true),
                     'pilihanPaket' => $this->input->post('pilihanPaket', true),
                     'nomorCustomer' => $this->input->post('nomorCustomer', true),
                     'pilihanTempat' => $this->input->post('pilihanTempat', true),
                     'tanggalCukur' => $this->input->post('tanggalCukur', true),
                     'jamCukur' => $this->input->post('jamCukur', true),
-                    'konfirmasi' => TRUE,
-                    'sessionUser' => TRUE,
+                    'konfirmasi' => true,
+                    'sessionUser' => true,
                 );
                 $this->session->set_userdata($databaru);
                 $paket = $databaru['pilihanPaket'];
@@ -98,7 +98,6 @@ class Sale extends CI_Controller
                 $order = [
                     'kode_order' => $databaru['kodeUnik'],
                     'nama_order' => $databaru['namaCustomer'],
-                    'paket_order' => $s_pilihanPaket,
                     'ponsel_order' => $databaru['nomorCustomer'],
                     'tempat_order' => $databaru['pilihanTempat'],
                     'tanggal_order' => $s_tanggal,
@@ -145,6 +144,51 @@ class Sale extends CI_Controller
             } else {
                 echo "tetooot";
             };
+        } elseif ($this->input->post('pembayaran') == 2) {
+            $pakets = $this->Data_model->getPaket();
+            $databaru = array(
+                'kodeUnik' => rand(10, 900),
+                'namaCustomer' => $this->input->post('namaCustomer', true),
+                'pilihanPaket' => array(),
+                'nomorCustomer' => $this->input->post('nomorCustomer', true),
+                'pilihanTempat' => $this->input->post('pilihanTempat', true),
+                'tanggalCukur' => $this->input->post('tanggalCukur', true),
+                'jamCukur' => $this->input->post('jamCukur', true),
+                'pembayaran' => $this->input->post('pembayaran', true),
+                'konfirmasi' => true,
+                'sessionUser' => true,
+            );
+            foreach ($pakets as $row) {
+                $databaru['pilihanPaket'][] = $this->input->post($row['id_paket'], true,);
+            }
+            $array_data = $this->input->post($row['id_paket'], true,);
+            $t_tanggal = $databaru['tanggalCukur'];
+            $s_tanggal = date("Y-m-d", strtotime("$t_tanggal"));
+            $order = [
+                'kode_order' => $databaru['kodeUnik'],
+                'nama_order' => $databaru['namaCustomer'],
+                'ponsel_order' => $databaru['nomorCustomer'],
+                'tempat_order' => $databaru['pilihanTempat'],
+                'tanggal_order' => $s_tanggal,
+                'jam_order' => $databaru['jamCukur'],
+                'pembayaran_order' => $databaru['pembayaran'],
+            ];
+            $data = $this->Data_model->orderCustomer($order);
+            $id_order = $data['insert_id'];
+
+            foreach ($array_data as $key => $value) {
+                $real_data[] = [
+                    'id_customer' => $id_order,
+                    'id_paket' => $key,
+                    'jumlah_paket' => $value,
+                ];
+            };
+            $data1 = $this->Data_model->insert_customer_paket($real_data);
+            $dataIn = $this->Data_model->orderCostumerJoin($id_order);
+            var_dump($dataIn);
+            // $this->load->view('template/header_another');
+            // $this->load->view('sale/konfirmasi_tunai');
+            // $this->load->view('template/footer');
         } else {
             $this->load->view('template/header_another');
             $this->load->view('sale/konfirmasiGagal');
@@ -154,7 +198,7 @@ class Sale extends CI_Controller
 
     public function toValid()
     {
-        $sessionBaru = array('validasi' => TRUE);
+        $sessionBaru = array('validasi' => true);
         $hapusSession = array('konfirmasi', 'pilihanPaket', 'pilihanTempat', 'tanggalCukur');
         $this->session->set_userdata($sessionBaru);
         $this->session->unset_userdata($hapusSession);
@@ -257,7 +301,7 @@ class Sale extends CI_Controller
     public function session()
     {
         $databaru = $this->session->userdata();
-        echo '<pre>', var_dump($databaru), '<pre>';
+        var_dump($databaru);
 
         // echo $databaru['kodeUnik'];
     }

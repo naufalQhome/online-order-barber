@@ -74,6 +74,7 @@ class Data_model  extends CI_Model
             ->from('order_customer')
             ->join('kecamatan', 'order_customer.tempat_order = kecamatan.id_kec')
             ->join('waktu_order', 'order_customer.jam_order = waktu_order.id_waktu')
+            ->join('customer_paket', 'order_customer.id_order = customer_paket.id_customer')
             ->where($id)
             ->get();
         return $query->row_array();
@@ -86,5 +87,25 @@ class Data_model  extends CI_Model
         $this->db->update('order_customer');
         $query = $this->db->get_where('order_customer', array('id_order' => $id));
         return $query->row_array();
+    }
+
+    public function updateCustomerPaket($id, $paket)
+    {
+        $this->db->set('paket_order', $paket);
+        $this->db->where('id_order', $id);
+        $this->db->update('order_customer');
+        $affected = $this->db->affected_rows() > 0;
+        return $affected;
+    }
+
+    public function insert_customer_paket($data)
+    {
+        $query = $this->db->insert_batch('customer_paket', $data);
+        $affected = $this->db->affected_rows() > 0;
+        $insert_id = $this->db->insert_id();
+        return array(
+            'affected' => $affected,
+            'insert_id' => $insert_id,
+        );
     }
 }

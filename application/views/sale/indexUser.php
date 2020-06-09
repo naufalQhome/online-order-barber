@@ -39,9 +39,9 @@
             </div>
             <div class="formActtion">
                 <form id="formDaftar" action="<?= base_url('sale/konfirmasi') ?>" method="POST">
+                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                     <div class="form-group">
                         <label for="namaCustomer">Nama Lengkap</label>
-                        <input name="kodeUnik" type="hidden" value="<?= rand(10, 900) ?>">
                         <input name="namaCustomer" type="text" class="form-control" id="namaCustomer" maxlength="30" placeholder="Nama" value="<?= $sessionData['namaCustomer'] ?>" required>
                     </div>
                     <div class="form-group">
@@ -51,16 +51,16 @@
                             $i = 1;
                             foreach ($paket1 as $paket) : $i++; ?>
                                 <div class="row">
-                                    <label for="" class="control-label col"><?= $paket['nama_paket'] ?></label>
-                                    <div class="input-group col">
+                                    <label for="" class="control-label float-left col"><?= $paket['nama_paket'] ?></label>
+                                    <div class="input-group input-group-sm float-right col">
                                         <span class="input-group-prepend">
-                                            <button type="button" class="btn btn-light btn-number" disabled="disabled" data-type="minus" data-field="quant[<?= $i ?>]">
+                                            <button type="button" class="btn btn-sm btn-light btn-number" disabled="disabled" data-type="minus" data-field="<?= $paket['id_paket'] ?>[<?= $i ?>]">
                                                 <i class="fa fa-minus"></i>
                                             </button>
                                         </span>
-                                        <input type="text" name="quant[<?= $i ?>]" class="form-control input-number" value="0" min="0" max="3">
+                                        <input type="text" name="<?= $paket['id_paket'] ?>[<?= $i ?>]" class="form-control form-control-sm input-number" value="0" min="0" max="3">
                                         <span class="input-group-append">
-                                            <button type="button" class="btn btn-light btn-number" data-type="plus" data-field="quant[<?= $i ?>]">
+                                            <button type="button" class="btn btn-sm btn-light btn-number" data-type="plus" data-field="<?= $paket['id_paket'] ?>[<?= $i ?>]">
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </span>
@@ -95,10 +95,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="pilihanPaket">Pembayaran Via </label>
-                        <select name="jamCukur" placeholder="Pilih.." class="form-control selectpicker" id="pilihanPaket" data-size="4" required>
-                            <option value="1">Transfer</option>
-                            <option value="2">Tunai</option>
+                        <label for="pembayran">Pembayaran Via </label>
+                        <select name="pembayaran" placeholder="Pilih.." class="form-control selectpicker" id="pembayran" data-size="4" required>
+                            <option value="1">Transfer Bank</option>
+                            <option value="2">Tunai (COD)</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Daftar</button>
