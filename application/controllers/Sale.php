@@ -159,15 +159,9 @@ class Sale extends CI_Controller
                 'sessionUser' => true,
             );
             foreach ($pakets as $row) {
-<<<<<<< HEAD
-                $databaru['pilihanPaket'][] = $this->input->post($row['id_paket'], true,);
-            }
-            $array_data = $this->input->post($row['id_paket'], true,);
-=======
                 $databaru['pilihanPaket'][$row['id_paket']] = $this->input->post($row['id_paket'], true,);
             }
             $array_data = $databaru['pilihanPaket'];
->>>>>>> bfa784a... 70% to work multiple paket
             $t_tanggal = $databaru['tanggalCukur'];
             $s_tanggal = date("Y-m-d", strtotime("$t_tanggal"));
             $order = [
@@ -190,13 +184,6 @@ class Sale extends CI_Controller
                 ];
             };
             $data1 = $this->Data_model->insert_customer_paket($real_data);
-<<<<<<< HEAD
-            $dataIn = $this->Data_model->orderCostumerJoin($id_order);
-            var_dump($dataIn);
-            // $this->load->view('template/header_another');
-            // $this->load->view('sale/konfirmasi_tunai');
-            // $this->load->view('template/footer');
-=======
             $return = $this->Data_model->orderCostumerJoin($id_order);
             $dataIn['array_result'] = $return['result'];
             $dataIn['array_row'] = $return['row'];
@@ -206,7 +193,6 @@ class Sale extends CI_Controller
             $this->load->view('template/header_another');
             $this->load->view('sale/konfirmasi_tunai', $dataIn);
             $this->load->view('template/footer');
->>>>>>> bfa784a... 70% to work multiple paket
         } else {
             $this->load->view('template/header_another');
             $this->load->view('sale/konfirmasiGagal');
