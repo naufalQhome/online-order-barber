@@ -54,6 +54,7 @@
                                     <label for="" class="control-label float-left col"><?= $paket['nama_paket'] ?></label>
                                     <div class="input-group input-group-sm float-right col">
                                         <span class="input-group-prepend">
+<<<<<<< HEAD
                                             <button type="button" class="btn btn-sm btn-light btn-number" disabled="disabled" data-type="minus" data-field="<?= $paket['id_paket'] ?>[<?= $i ?>]">
                                                 <i class="fa fa-minus"></i>
                                             </button>
@@ -61,6 +62,15 @@
                                         <input type="text" name="<?= $paket['id_paket'] ?>[<?= $i ?>]" class="form-control form-control-sm input-number" value="0" min="0" max="3">
                                         <span class="input-group-append">
                                             <button type="button" class="btn btn-sm btn-light btn-number" data-type="plus" data-field="<?= $paket['id_paket'] ?>[<?= $i ?>]">
+=======
+                                            <button type="button" class="btn btn-sm btn-light btn-number" disabled="disabled" data-type="minus" data-field="<?= $paket['id_paket'] ?>">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                        </span>
+                                        <input type="text" name="<?= $paket['id_paket'] ?>" class="form-control form-control-sm input-number" value="0" min="0" max="3">
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-sm btn-light btn-number" data-type="plus" data-field="<?= $paket['id_paket'] ?>">
+>>>>>>> bfa784a... 70% to work multiple paket
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </span>
