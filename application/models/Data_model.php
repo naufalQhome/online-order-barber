@@ -76,6 +76,7 @@ class Data_model  extends CI_Model
             ->join('waktu_order', 'order_customer.jam_order = waktu_order.id_waktu')
             ->join('customer_paket', 'order_customer.id_order = customer_paket.id_customer')
             ->join('paket_cukur', 'customer_paket.id_paket = paket_cukur.id_paket')
+            ->join('pembayaran', 'order_customer.pembayaran_order = pembayaran.id_pembayaran')
             ->where($id)
             ->get();
         $affected = $this->db->affected_rows() > 0;

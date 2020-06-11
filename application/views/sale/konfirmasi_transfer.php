@@ -18,10 +18,9 @@ $tanggal = date("d-m-Y", strtotime($array_row['tanggal_order']));
                                     <?= $row['nama_paket'] ?> (<?= $row['jumlah_paket'] ?> Orang)
                                 </td>
                                 <td class="text-right">
-                                    Rp<?php $total[] = $row['jumlah_paket'] * $row['harga_paket'];
-                                        $totals[] = array_sum($total);
-                                        $totalss = array_sum($total);
-                                        echo number_format($totalss, 0, ".", ".") ?>,-
+                                    Rp<?php $total = $row['jumlah_paket'] * $row['harga_paket'];
+                                        $totals[] = $row['jumlah_paket'] * $row['harga_paket'];
+                                        echo number_format($total, 0, ".", ".") ?>,-
                                 </td>
                             <?php endif ?>
                         </tr>
@@ -44,12 +43,15 @@ $tanggal = date("d-m-Y", strtotime($array_row['tanggal_order']));
                     </tr>
                 </tbody>
             </table>
-
+            <?php
+            $totals = array_sum($totals);
+            // $totalss = array_sum($total);
+            ?>
 
             <br>
-            <ul>Total <b> Rp<?php $grandTotal = array_sum($totals) + $array_row['harga_kec'] + $array_row['kode_order'];
+            <ul>Total <b> Rp<?php $grandTotal = $totals + $array_row['harga_kec'] + $array_row['kode_order'];
                             echo number_format($grandTotal, 0, ".", ".") ?>,-</b></ul>
-            Pendaftaran anda berhasil, pastikan anda dalam keadaan tidak demam, batuk, pilek atau nyeri telan. Pembayaran Anda akan ditagihkan ketika Capster kami telah telah datang ke tempat Anda dengan total biaya<b> Rp<?= number_format($grandTotal, 0, ".", ".") ?>,-</b>,<br>Konfirmasi pendaftaran Anda di bawah ini.
+            Pendaftaran anda berhasil, pastikan anda dalam keadaan tidak demam, batuk, pilek atau nyeri telan. Silakan melakukan pembayaran via transfer bank ke rekening <b>BCA</b> atas nama RA. Nurul Malita <b>0374211117</b> dengan total biaya<b> Rp<?= number_format($grandTotal, 0, ".", ".") ?>,-</b>, lalu konfirmasi pembayaran di bawah ini.
         </p>
         <hr>
 
@@ -64,6 +66,10 @@ $tanggal = date("d-m-Y", strtotime($array_row['tanggal_order']));
             <div class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" id="customCheck2" required>
                 <label class="custom-control-label" for="customCheck2">Lokasi Cukur <?= $array_row['nama_kec'] ?></label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="customCheck3" required>
+                <label class="custom-control-label" for="customCheck3">Saya telah melakukan pembayaran</label>
             </div>
             <div class="form-group">
                 <button class="btn btn-success btn-block" type="submit">Konfirmasi</button>

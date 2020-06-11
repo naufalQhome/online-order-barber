@@ -18,13 +18,13 @@ class Sale extends CI_Controller
 
     public function index()
     {
-        if ($this->session->has_userdata('konfirmasi') == 'true') {
+        if ($this->session->has_userdata('konfirmasi')) {
             redirect('sale/konfirmasi');
         };
-        if ($this->session->has_userdata('validasi') == 'true') {
+        if ($this->session->has_userdata('validasi')) {
             redirect('sale/validasi');
         };
-        if ($this->session->has_userdata('sessionUser') == 'true') {
+        if ($this->session->has_userdata('sessionUser')) {
             // echo 'iniheee';
             $data['sessionData'] = $this->session->userdata();
             $this->load->model('Data_model');
@@ -48,103 +48,11 @@ class Sale extends CI_Controller
 
     public function konfirmasi()
     {
-        if ($this->session->has_userdata('validasi') == 'true') {
+        $cekSession = $this->session->userdata();
+        if ($this->session->has_userdata('validasi')) {
             redirect('sale/validasi');
         };
-        if ($this->input->post('pembayaran') == 1) {
-            $databaru = array(
-                'kodeUnik' => $this->input->post('kodeUnik', true),
-                'namaCustomer' => $this->input->post('namaCustomer', true),
-                'pilihanPaket' => $this->input->post('pilihanPaket', true),
-                'nomorCustomer' => $this->input->post('nomorCustomer', true),
-                'pilihanTempat' => $this->input->post('pilihanTempat', true),
-                'tanggalCukur' => $this->input->post('tanggalCukur', true),
-                'jamCukur' => $this->input->post('jamCukur', true),
-                'konfirmasi' => TRUE,
-                'sessionUser' => TRUE,
-            );
-
-            // var_dump($databaru);
-
-            if (!$this->session->has_userdata('id_konfirmasi')) {
-                $databaru = array(
-                    'kodeUnik' => rand(10, 900),
-                    'namaCustomer' => $this->input->post('namaCustomer', true),
-                    'pilihanPaket' => $this->input->post('pilihanPaket', true),
-                    'nomorCustomer' => $this->input->post('nomorCustomer', true),
-                    'pilihanTempat' => $this->input->post('pilihanTempat', true),
-                    'tanggalCukur' => $this->input->post('tanggalCukur', true),
-                    'jamCukur' => $this->input->post('jamCukur', true),
-                    'konfirmasi' => true,
-                    'sessionUser' => true,
-                );
-                $this->session->set_userdata($databaru);
-                $paket = $databaru['pilihanPaket'];
-                $kec =  $databaru['pilihanTempat'];
-                $paket = $this->Data_model->s_getPaket($paket);
-                $kecamatan = $this->Data_model->s_getKec($kec);
-                foreach ($paket as $row) {
-                    $idPaket[] = $row['id_paket'];
-                    $harga[] =  $row['harga_paket'];
-                };
-                $harga[] = $kecamatan['harga_kec'];
-                $harga[] = $databaru['kodeUnik'];
-                // var_dump($idPaket);
-                $totalHarga = array_sum($harga);
-                $s_pilihanPaket = implode(",", $idPaket);
-                // echo $s_pilihanPaket;
-                $t_tanggal = $databaru['tanggalCukur'];
-                $s_tanggal = date("Y-m-d", strtotime("$t_tanggal"));
-                $order = [
-                    'kode_order' => $databaru['kodeUnik'],
-                    'nama_order' => $databaru['namaCustomer'],
-                    'ponsel_order' => $databaru['nomorCustomer'],
-                    'tempat_order' => $databaru['pilihanTempat'],
-                    'tanggal_order' => $s_tanggal,
-                    'jam_order' => $databaru['jamCukur'],
-                    'total_order' => $totalHarga,
-                ];
-                $data = $this->Data_model->orderCustomer($order);
-                $id_order = $data['insert_id'];
-                $this->session->set_userdata('id_konfirmasi', $id_order);
-                // echo '<pre>', var_dump($order), '</pre>';
-            }
-
-
-            $kode = null;
-            $cekSession = $this->session->userdata();
-            if (isset($cekSession['id_konfirmasi'])) {
-                $databaru = $this->session->userdata();
-                $id_order = $databaru['id_konfirmasi'];
-                $kecamatan = $this->Data_model->s_getKec($databaru['pilihanTempat']);
-                $paket = $this->Data_model->s_getPaket($databaru['pilihanPaket']);
-                $jam = $this->Data_model->s_getWaktu($databaru['jamCukur']);
-                $data['jam'] = $jam;
-                $data['kecamatan'] = $kecamatan;
-                $data['paket'] = $paket;
-                $data['order'] = $this->Data_model->orderCustomerId($id_order);
-                $this->load->view('template/header_another', $data);
-                $this->load->view('sale/konfirmasi', $data);
-                $this->load->view('template/footer', $data);
-            } elseif (isset($databaru['kode_order'])) {
-                $this->session->set_userdata($databaru);
-                $jam = $this->Data_model->s_getWaktu($databaru['jamCukur']);
-                $id_order = $databaru['id_konfirmasi'];
-                $databaru = $this->session->userdata();
-                $data['kecamatan'] = $kecamatan;
-                $data['paket'] = $paket;
-                $data['order'] = $this->Data_model->orderCustomerId($id_order);
-                $this->load->view('template/header_another', $data);
-                $this->load->view('sale/konfirmasi', $data);
-                $this->load->view('template/footer', $data);
-            } elseif (!isset($cekSession['kode_order'])) {
-                $this->load->view('template/header_another');
-                $this->load->view('sale/konfirmasiGagal');
-                $this->load->view('template/footer');
-            } else {
-                echo "tetooot";
-            };
-        } elseif ($this->input->post('pembayaran') == 2) {
+        if ($this->input->post('pembayaran', true) >= '1' or $this->session->has_userdata('id_konfirmasi')) {
             $pakets = $this->Data_model->getPaket();
             $databaru = array(
                 'kodeUnik' => rand(10, 900),
@@ -158,46 +66,101 @@ class Sale extends CI_Controller
                 'konfirmasi' => true,
                 'sessionUser' => true,
             );
-            foreach ($pakets as $row) {
-                $databaru['pilihanPaket'][$row['id_paket']] = $this->input->post($row['id_paket'], true,);
-            }
-            $array_data = $databaru['pilihanPaket'];
-            $t_tanggal = $databaru['tanggalCukur'];
-            $s_tanggal = date("Y-m-d", strtotime("$t_tanggal"));
-            $order = [
-                'kode_order' => $databaru['kodeUnik'],
-                'nama_order' => $databaru['namaCustomer'],
-                'ponsel_order' => $databaru['nomorCustomer'],
-                'tempat_order' => $databaru['pilihanTempat'],
-                'tanggal_order' => $s_tanggal,
-                'jam_order' => $databaru['jamCukur'],
-                'pembayaran_order' => $databaru['pembayaran'],
-            ];
-            $data = $this->Data_model->orderCustomer($order);
-            $id_order = $data['insert_id'];
 
-            foreach ($array_data as $key => $value) {
-                $real_data[] = [
-                    'id_customer' => $id_order,
-                    'id_paket' => $key,
-                    'jumlah_paket' => $value,
-                ];
-            };
-            $data1 = $this->Data_model->insert_customer_paket($real_data);
-            $return = $this->Data_model->orderCostumerJoin($id_order);
-            $dataIn['array_result'] = $return['result'];
-            $dataIn['array_row'] = $return['row'];
-            // var_dump($array_data);
-            // var_dump($real_data);
-            // var_dump($dataIn['order']['result']);
-            $this->load->view('template/header_another');
-            $this->load->view('sale/konfirmasi_tunai', $dataIn);
-            $this->load->view('template/footer');
+
+            if (!$this->session->has_userdata('id_konfirmasi')) {
+                $this->session->set_userdata($databaru);
+                $this->to_input_post($pakets, $databaru);
+
+                // echo '<pre>', var_dump($order), '</pre>';
+            }
+
+
+            if (isset($cekSession['id_konfirmasi'])) {
+                $databaru = $this->session->userdata();
+                $id_order = $databaru['id_konfirmasi'];
+                $return = $this->Data_model->orderCostumerJoin($id_order);
+                $dataIn['array_result'] = $return['result'];
+                $dataIn['array_row'] = $return['row'];
+                $this->load->view('template/header_another');
+                $this->load->view('sale/konfirmasi_transfer', $dataIn);
+                $this->load->view('template/footer');
+            } else {
+                redirect('sale/errorHtml');
+            }
         } else {
-            $this->load->view('template/header_another');
-            $this->load->view('sale/konfirmasiGagal');
-            $this->load->view('template/footer');
+            redirect('sale/errorHtml');
         }
+    }
+
+    private function to_input_post($pakets, $databaru)
+    {
+        foreach ($pakets as $row) {
+            $databaru['pilihanPaket'][$row['id_paket']] = $this->input->post($row['id_paket'], true,);
+        }
+
+
+        $array_data = $databaru['pilihanPaket'];
+        $t_tanggal = $databaru['tanggalCukur'];
+        $s_tanggal = date("Y-m-d", strtotime("$t_tanggal"));
+        $order = [
+            'kode_order' => $databaru['kodeUnik'],
+            'nama_order' => $databaru['namaCustomer'],
+            'ponsel_order' => $databaru['nomorCustomer'],
+            'tempat_order' => $databaru['pilihanTempat'],
+            'tanggal_order' => $s_tanggal,
+            'jam_order' => $databaru['jamCukur'],
+            'pembayaran_order' => $databaru['pembayaran'],
+        ];
+
+        if (!count(array_filter(array_values($array_data))) >= 1) {
+            redirect('sale/errorHtml');
+        };
+
+        // echo count(array_filter(array_values($array_data)));
+        $data = $this->Data_model->orderCustomer($order);
+        $id_order = $data['insert_id'];
+
+        foreach ($array_data as $key => $value) {
+            $real_data[] = [
+                'id_customer' => $id_order,
+                'id_paket' => $key,
+                'jumlah_paket' => $value,
+            ];
+        };
+        $data1 = $this->Data_model->insert_customer_paket($real_data);
+        $return = $this->Data_model->orderCostumerJoin($id_order);
+        $dataIn['array_result'] = $return['result'];
+        $dataIn['array_row'] = $return['row'];
+        $this->session->set_userdata('id_konfirmasi', $id_order);
+
+        if ($this->input->post('pembayaran', true) == 1) {
+            $this->konfirmasi_transfer($dataIn);
+        } else {
+            $this->konfirmasi_tunai($dataIn);
+        }
+    }
+
+
+    public function errorHtml()
+    {
+        $this->load->view('template/header_another');
+        $this->load->view('sale/konfirmasiGagal');
+        $this->load->view('template/footer');
+    }
+
+    private function konfirmasi_tunai($data)
+    {
+        $this->load->view('template/header_another');
+        $this->load->view('sale/konfirmasi_tunai', $data);
+        $this->load->view('template/footer');
+    }
+
+    private function konfirmasi_transfer($data)
+    {
+        $this->load->view('template/header_another');
+        $this->load->view('sale/konfirmasi_transfer', $data);
+        $this->load->view('template/footer');
     }
 
     public function toValid()
@@ -208,17 +171,7 @@ class Sale extends CI_Controller
         $this->session->unset_userdata($hapusSession);
         $this->load->model('Data_model');
         $id_data = $this->session->userdata('id_konfirmasi');
-        // $order = [
-        //     'kode_order' => $this->input->post('kodeUnik', true),
-        //     'nama_order' => $this->input->post('namaCustomer', true),
-        //     'paket_order' => $this->input->post('pilihanPaket', true),
-        //     'ponsel_order' => $this->input->post('nomorCustomer', true),
-        //     'tempat_order' => $this->input->post('pilihanTempat', true),
-        //     'tanggal_order' => $this->input->post('tanggalCukur', true),
-        //     'jam_order' => $this->input->post('jamCukur', true),
-        //     'total_order' => $this->input->post('grandTotal', true),
-        // ];
-        // $update = array('id_order' => $id_data, 'konfirmasi_order' => 1);
+
         $data = $this->Data_model->updateCustomerId($id_data);
         $sessionId = array('id_custom' => $id_data);
         $this->session->set_userdata($sessionId);
@@ -273,21 +226,26 @@ class Sale extends CI_Controller
             redirect('sale/validasi/' . $id_data);
         }
     }
-    public function validasi()
+    private function validasi()
     {
-        $id =  $this->session->userdata('id_custom');
-        $this->load->model('Data_model');
-        $dataid = $this->Data_model->orderCostumerJoin($id);
-        $data['order'] = $dataid;
-        $this->load->view('template/header_another', $data);
-        $this->load->view('sale/validasi', $data);
-        $this->load->view('template/footer', $data);
+        if ($this->session->has_userdata('validasi')) {
+            $id_order =  $this->session->userdata('id_custom');
+            $this->load->model('Data_model');
+            $return = $this->Data_model->orderCostumerJoin($id_order);
+            $dataIn['array_result'] = $return['result'];
+            $dataIn['array_row'] = $return['row'];
+            $this->load->view('template/header_another');
+            $this->load->view('sale/validasi', $dataIn);
+            $this->load->view('template/footer');
+        } else {
+            $this->errorHtml('Validasi');
+        };
     }
 
     public function pesanLagi()
     {
         // $this->session->sess_destroy();
-        $hapusSession = array('kodeUnik', 'konfirmasi', 'validasi', 'pilihanPaket', 'pilihanTempat', 'tanggalCukur', 'id_custom', 'id_konfirmasi');
+        $hapusSession = array('kodeUnik', 'konfirmasi', 'validasi', 'pilihanPaket', 'pilihanTempat', 'tanggalCukur', 'id_custom', 'id_konfirmasi', 'pembayaran');
         $this->session->unset_userdata($hapusSession);
 
         redirect('sale');

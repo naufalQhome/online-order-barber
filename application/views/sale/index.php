@@ -1,4 +1,4 @@
-<div class="container">
+`<div class="container">
     <div class="row">
         <div id="slide" class="col-lg-6 mt-4">
             <!-- <div id="carouselExampleIndicators" class="carousel slide d-none d-lg-block" data-ride="carousel"> -->
@@ -39,22 +39,39 @@
             </div>
             <div class="formActtion">
                 <form id="formDaftar" action="<?= base_url('sale/konfirmasi') ?>" method="POST">
+                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                     <div class="form-group">
                         <label for="namaCustomer">Nama Lengkap</label>
-                        <input name="kodeUnik" type="hidden" value="<?= rand(10, 900) ?>">
-                        <input name="namaCustomer" type="text" class="form-control" id="namaCustomer" maxlength="30" placeholder="Nama" value="" required>
+                        <input pattern=".{4,}" required title="Masukkan Nama Lengkap" name="namaCustomer" type="text" class="form-control" id="namaCustomer" maxlength="30" placeholder="Nama" value="" required>
                     </div>
                     <div class="form-group">
-                        <label for="pilihanPaket">Pilihan Paket</label>
-                        <select name="pilihanPaket[]" class="form-control selectpicker required" id="pilihanPaket" data-size="4" multiple required>
-                            <?php foreach ($paket1 as $paket) : ?>
-                                <option value="<?= $paket['id_paket'] ?>"><?= $paket['nama_paket'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <!-- <label for="pilihanPaket">Pilihan Paket</label><br> -->
+                        <div class="container-fluid">
+                            <?php
+                            $i = 1;
+                            foreach ($paket1 as $paket) : $i++; ?>
+                                <div class="row">
+                                    <label for="<?= $paket['id_paket'] ?>" class="control-label float-left col"><?= $paket['nama_paket'] ?></label>
+                                    <div class="input-group input-group-sm float-right col">
+                                        <span class="input-group-prepend">
+                                            <button type="button" class="btn btn-sm btn-light btn-number" disabled="disabled" data-type="minus" data-field="<?= $paket['id_paket'] ?>">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                        </span>
+                                        <input id="<?= $paket['id_paket'] ?>" type="text" name="<?= $paket['id_paket'] ?>" class="form-control form-control-sm input-number" value="0" min="0" max="3">
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-sm btn-light btn-number" data-type="plus" data-field="<?= $paket['id_paket'] ?>">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            <?php endforeach ?>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="nomorCustomer">Nomor Whatsapp</label>
-                        <input name="nomorCustomer" type="tel" class="form-control" id="nomorCustomer" maxlength="20" placeholder="Ponsel" required>
+                        <input name="nomorCustomer" type="tel" class="form-control" id="nomorCustomer" value="" maxlength="20" placeholder="Ponsel" required>
                     </div>
                     <div class="form-group">
                         <label for="pilihanTempat">Cukur di mana?</label>
@@ -74,6 +91,14 @@
                             <?php foreach ($waktu as $row) : ?>
                                 <option value="<?= $row['id_waktu'] ?>"><?= $row['nama_waktu'] ?> WIB</option>
                             <?php endforeach ?>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pembayran">Pembayaran Via </label>
+                        <select name="pembayaran" placeholder="Pilih.." class="form-control selectpicker" id="pembayran" data-size="4" required>
+                            <option value="1">Transfer Bank</option>
+                            <option value="2">Tunai (COD)</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Daftar</button>
@@ -118,7 +143,7 @@
 
     <p class="aboutText text-monospace text-justify">Kami menyediakan kebutuhan cukur dalam genggaman ponsel Anda. Anda tak perlu mengantre, tapi tetap bisa merasakan kualitas barbershop premium #stayathome.<br>
         Kami selalu memerhatikan keselamatan kerja dan kesehatan pelanggan sekaligus pegawai kami. Dibekali oleh protokol yang sudah kami buat melalui diskusi dengan dokter agar terhindar dari penyebaran penyakit atau virus.<br>
-        SOP kami : 1 cape/kain untuk 1 costumer, disinfectan alat, kapster memakai APD (masker, faceshield / kacamata, sarung tangan sekali pakai)</p>
+        SOP kami : 1 cape/kain untuk 1 customer, disinfectan alat, kapster memakai APD (masker, faceshield / kacamata, sarung tangan sekali pakai)</p>
 
     <hr>
 </div>
