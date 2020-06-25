@@ -12,6 +12,8 @@ class Sale extends CI_Controller
         $this->load->library('email');
         $this->load->library('phpmailer_lib');
         $this->load->model('Data_model');
+        $this->load->helper(array('form', 'url'));
+        $this->load->library('form_validation');
     }
 
 
@@ -52,7 +54,13 @@ class Sale extends CI_Controller
         if ($this->session->has_userdata('validasi')) {
             redirect('sale/validasi');
         };
-        if ($this->input->post('pembayaran', true) >= '1' or $this->session->has_userdata('id_konfirmasi')) {
+        // if ($this->form_validation->run() == FALSE) {
+        //     redirect('sale/index');
+        // } else {
+        //     die("berhasil");
+        // }
+
+        if ($this->session->has_userdata('id_konfirmasi') or $this->input->post('pembayaran', true) >= 1) {
             $pakets = $this->Data_model->getPaket();
             $databaru = array(
                 'kodeUnik' => rand(10, 900),
@@ -67,26 +75,22 @@ class Sale extends CI_Controller
                 'sessionUser' => true,
             );
 
-
-            if (!$this->session->has_userdata('id_konfirmasi')) {
-                $this->session->set_userdata($databaru);
-                $this->to_input_post($pakets, $databaru);
-
-                // echo '<pre>', var_dump($order), '</pre>';
-            }
-
-
             if (isset($cekSession['id_konfirmasi'])) {
                 $databaru = $this->session->userdata();
                 $id_order = $databaru['id_konfirmasi'];
                 $return = $this->Data_model->orderCostumerJoin($id_order);
                 $dataIn['array_result'] = $return['result'];
                 $dataIn['array_row'] = $return['row'];
-                $this->load->view('template/header_another');
-                $this->load->view('sale/konfirmasi_transfer', $dataIn);
-                $this->load->view('template/footer');
-            } else {
-                redirect('sale/errorHtml');
+                if ($cekSession['pembayaran'] == 1) {
+                    $this->konfirmasi_transfer($dataIn);
+                } else {
+                    $this->konfirmasi_tunai($dataIn);
+                }
+            }
+
+            if (!$this->session->has_userdata('id_konfirmasi')) {
+                $this->session->set_userdata($databaru);
+                $this->to_input_post($pakets, $databaru);
             }
         } else {
             redirect('sale/errorHtml');

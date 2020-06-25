@@ -42,7 +42,7 @@
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                     <div class="form-group">
                         <label for="namaCustomer">Nama Lengkap</label>
-                        <input pattern=".{4,}" required title="Masukkan Nama Lengkap" name="namaCustomer" type="text" class="form-control" id="namaCustomer" maxlength="30" placeholder="Nama" value="" required>
+                        <input pattern=".{4,}" required title="Masukkan Nama Lengkap" name="namaCustomer" type="text" class="form-control" id="namaCustomer" maxlength="30" placeholder="Nama" value="">
                     </div>
                     <div class="form-group">
                         <!-- <label for="pilihanPaket">Pilihan Paket</label><br> -->
