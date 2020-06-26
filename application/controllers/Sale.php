@@ -118,7 +118,10 @@ class Sale extends CI_Controller
         ];
 
         if (!count(array_filter(array_values($array_data))) >= 1) {
-            redirect('sale/errorHtml');
+            $hapusSession = array('kodeUnik', 'konfirmasi', 'validasi', 'pilihanPaket', 'pilihanTempat', 'tanggalCukur', 'id_custom', 'id_konfirmasi', 'pembayaran');
+            $this->session->unset_userdata($hapusSession);
+            $this->session->set_flashdata('pesan', ' <div class="alert alert-danger"> <strong>Maaf</strong>, paket cukur rambut belum ditambahkan.</div>');
+            redirect('sale/index');
         };
 
         // echo count(array_filter(array_values($array_data)));
@@ -179,11 +182,11 @@ class Sale extends CI_Controller
         $data = $this->Data_model->updateCustomerId($id_data);
         $sessionId = array('id_custom' => $id_data);
         $this->session->set_userdata($sessionId);
-        $joinKec = $this->Data_model->orderCostumerJoin($id_data);
-        $id_waktu = $joinKec['jam_order'];
+        $return = $this->Data_model->orderCostumerJoin($id_data);
+        $array_result = $return['result'];
+        $array_row = $return['row'];
         $tanggal = date("d-m-Y", strtotime($data['tanggal_order']));
-        $jam = $this->Data_model->s_getWaktu($id_waktu);
-        $jam = $jam['nama_waktu'];
+
         // $data['jam'] = $jam;
         // PHPMailer object
         $mail = $this->phpmailer_lib->load();
@@ -201,24 +204,49 @@ class Sale extends CI_Controller
         $mail->addReplyTo('layanan@m-barber.com', 'm-Barber');
 
         // Add a recipient
-        $mail->addAddress('barbermobile1@gmail.com');
+        // $mail->addAddress('barbermobile1@gmail.com');
+        $mail->addAddress('n20041996@gmail.com');
 
         // // Add cc or bcc 
         // $mail->addCC('arfinhenditya2@gmail.com');
-        $mail->addBCC('n20041996@gmail.com');
+        // $mail->addBCC('n20041996@gmail.com');
 
         // Email subject
-        $mail->Subject = 'ID ' . $id_data . ' ' . $data['nama_order'];
+        $mail->Subject = 'ID ' . $id_data . ' ' . $array_row['nama_order'];
 
         // Set email format to HTML
         $mail->isHTML(true);
 
+        //     $total = array();
+        //     $totals = array();
+        //     foreach ($array_result as $row) {
+
+        //           if ($row['jumlah_paket'] >= 1){
+
+        //                   $total = $row['jumlah_paket'] * $row['harga_paket'];
+        //                         $totals[] = $row['jumlah_paket'] * $row['harga_paket'];
+        //                         echo number_format($total, 0, ".", ".") 
+
+        //           }
+        // } 
+
+        foreach ($array_result as $row) {
+            if ($row['jumlah_paket'] >= 1) {
+                $array_data[] = $row['nama_paket'] . '(' . $row['jumlah_paket'] . ' orang)';
+                $total = $row['jumlah_paket'] * $row['harga_paket'];
+                $totals[] = $row['jumlah_paket'] * $row['harga_paket'];
+            }
+        };
+        $totals = array_sum($totals);
+        $grandTotal = $totals + $array_row['harga_kec'] + $array_row['kode_order'];
+        $stringArray =  implode(", ", $array_data);
         // Email body content
-        $mailContent = "<h1>Rp." . $data['total_order'] . " ,-</h1>
+        $mailContent = "<h1>Rp." . number_format($grandTotal, 0, ".", ".") . " ,-</h1>
             <p>Hai! kami dari m-barber.com ingin mengonfirmasi pesanan
-            <li>Nama : " . $data['nama_order'] . "</li><li>Paket : " . $data['paket_order'] . "</li><li>Ponsel : " . $data['ponsel_order'] . "</li><li>Kec : " . $joinKec['nama_kec'] . "</li><li>Tanggal : " . $tanggal . "</li><li>Jam : " . $jam . "</li><li>Total : Rp. " . number_format($data['total_order']) . ",-</li>Telah berhasil terdaftar, kapster kami akan menghubungi anda paling lambat 1 jam sebelum waktu yang di tentukan. Terima kasih<br></p><a href='https://api.whatsapp.com/send?phone=" . $data['ponsel_order'] . "&text=Hai!%20terimakasih%20anda%20telah%20mendaftar%20cukur%20rambut%20pada%20m-barber.com%20'>Klik untuk chat WA " . $data['ponsel_order'] . "</a>";
+            <li>Nama : " . $array_row['nama_order'] . "</li><li>Paket : " . $stringArray . "</li><li>Ponsel : " . $array_row['ponsel_order'] . "</li><li>Kec : " . $array_row['nama_kec'] . "</li><li>Tanggal : " . $tanggal . "</li><li>Jam : " . $array_row['nama_waktu'] . "</li><li>Total : Rp. " . number_format($grandTotal, 0, ".", ".") . ",-</li>Telah berhasil terdaftar, kapster kami akan menghubungi anda paling lambat 1 jam sebelum waktu yang di tentukan. Terima kasih<br></p><a href='https://api.whatsapp.com/send?phone=" . $array_row['ponsel_order'] . "&text=Hai!%20terimakasih%20anda%20telah%20mendaftar%20cukur%20rambut%20pada%20m-barber.com%20'>Klik untuk chat WA " . $array_row['ponsel_order'] . "</a>";
         $mail->Body = $mailContent;
 
+        // echo $mailContent;
         // Send email
         if (!$mail->send()) {
             echo 'Message could not be sent.';
@@ -230,7 +258,7 @@ class Sale extends CI_Controller
             redirect('sale/validasi/' . $id_data);
         }
     }
-    private function validasi()
+    public function validasi()
     {
         if ($this->session->has_userdata('validasi')) {
             $id_order =  $this->session->userdata('id_custom');

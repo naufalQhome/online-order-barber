@@ -45,6 +45,7 @@
                         <input pattern=".{4,}" required title="Masukkan Nama Lengkap" name="namaCustomer" type="text" class="form-control" id="namaCustomer" maxlength="30" placeholder="Nama" value="">
                     </div>
                     <div class="form-group">
+                        <?= $this->session->flashdata('pesan'); ?>
                         <!-- <label for="pilihanPaket">Pilihan Paket</label><br> -->
                         <div class="container-fluid">
                             <?php
