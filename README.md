@@ -1,4 +1,4 @@
-# m-barber
+# m-barber Barber Home Yogyakarta
 m-barber yogyakrta
 
 this is a web order app for barbershop
