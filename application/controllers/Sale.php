@@ -128,7 +128,7 @@ class Sale extends CI_Controller
         $mail->Host     = 'mail.m-barber.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'layanan@m-barber.com';
-        $mail->Password = 'ljt=uaA{Od8u';
+        $mail->Password = 'password';
         $mail->SMTPSecure = 'ssl';
         $mail->Port     = 465;
 
